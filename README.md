@@ -119,8 +119,7 @@ Currently, movement is limited to a single axis (Y-axis), and the environment is
 ├── hmr_task_manager.py
 ├── hmr_environment.py
 ├── test_robot.py        # Automated test script
-├── README.md            
-└── OOP_Summative-Assesment_System-Design.docx
+└── README.md            
 ```
 
 ---
