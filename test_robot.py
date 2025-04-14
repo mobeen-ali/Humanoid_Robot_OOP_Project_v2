@@ -88,6 +88,38 @@ def test_shutdown():
     assert robot.battery.charge == 100, "Robot should not recharge after shutdown"
 
 
+def test_movement_blocked_by_low_battery():
+    """Robot should not move if battery is 10% or less."""
+    robot = Robot()
+    robot.battery.charge = 10
+    robot.move("forward")
+    assert robot.y == 0, "Robot should not move when battery is too low"
+
+
+def test_pickup_blocked_when_shutdown():
+    """Robot should not pick up an item after shutdown."""
+    robot = Robot()
+    robot.shutdown()
+    robot.pick_up("item")
+    assert robot.holding_object is None, "Robot should not pick up when shut down"
+
+
+def test_recharge_blocked_when_shutdown():
+    """Recharging should not work after shutdown."""
+    robot = Robot()
+    robot.battery.drain(40)
+    robot.shutdown()
+    robot.recharge()
+    assert robot.battery.charge == 60, "Recharge should be blocked after shutdown"
+
+
+def test_undo_without_any_tasks():
+    """Undo should handle empty task stack gracefully."""
+    robot = Robot()
+    robot.execute_last_task()
+    assert len(robot.task_manager.task_stack) == 0, "Task stack should remain empty"
+
+
 if __name__ == "__main__":
     print("Running tests...")
     test_movement()
@@ -98,4 +130,8 @@ if __name__ == "__main__":
     test_task_logging()
     test_undo_last_task()
     test_shutdown()
+    test_movement_blocked_by_low_battery()
+    test_pickup_blocked_when_shutdown()
+    test_recharge_blocked_when_shutdown()
+    test_undo_without_any_tasks()
     print("All tests passed successfully.")
